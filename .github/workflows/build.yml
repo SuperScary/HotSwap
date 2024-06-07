@@ -1,4 +1,4 @@
-name: Build
+name: Build HotSwap
 
 on: [push, pull_request]
 
@@ -12,13 +12,35 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Setup JDK 17
+      - name: Setup JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
 
+      - name: Check gradle validation
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Make Gradle Wrapper executable
+        run: chmod +x ./gradlew
+
       - name: Build with Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/gradle-build-action@v2
         with:
-          arguments: build
+          arguments: build --stacktrace
+
+      - name: Setup Environment Variables
+        run: |
+            cat $GITHUB_WORKSPACE/gradle.properties | grep ^supported_minecraft_versions >> $GITHUB_ENV
+            cat $GITHUB_WORKSPACE/gradle.properties | grep ^minecraft_version >> $GITHUB_ENV
+            cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version >> $GITHUB_ENV
+
+      - name: Archives Results
+        uses: actions/upload-artifact@v3
+        with:
+            name: BetterF3-${{ env.mod_version }}-mc${{ env.minecraft_version }}
+            path: |
+                build/reports/
+                **/build/reports/
+                build/libs
+                **/build/libs/
