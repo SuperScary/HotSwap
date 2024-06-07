@@ -28,19 +28,3 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: build --stacktrace
-
-      - name: Setup Environment Variables
-        run: |
-            cat $GITHUB_WORKSPACE/gradle.properties | grep ^supported_minecraft_versions >> $GITHUB_ENV
-            cat $GITHUB_WORKSPACE/gradle.properties | grep ^minecraft_version >> $GITHUB_ENV
-            cat $GITHUB_WORKSPACE/gradle.properties | grep ^mod_version >> $GITHUB_ENV
-
-      - name: Archives Results
-        uses: actions/upload-artifact@v3
-        with:
-            name: BetterF3-${{ env.mod_version }}-mc${{ env.minecraft_version }}
-            path: |
-                build/reports/
-                **/build/reports/
-                build/libs
-                **/build/libs/
