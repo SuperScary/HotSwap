@@ -1,10 +1,12 @@
-package hotswap.client.events;
+package hotswapneo.client.events;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import hotswap.Config;
-import hotswap.client.Keybindings;
-import hotswap.util.ToolHelper;
+import hotswap.HotSwap;
+import hotswap.client.init.Keybindings;
+import hotswapneo.Config;
+import hotswapneo.util.ToolHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
@@ -14,17 +16,12 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import static hotswap.HotSwap.MODID;
 
 @SuppressWarnings("unused")
-@EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
+@EventBusSubscriber(modid = HotSwap.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class ClientEvent {
 
-    static Logger LOG = LoggerFactory.getLogger(ClientEvent.class);
-
+    private static boolean enabled = true;
     private static int currentSelected = -1;
     private static int newSelected = -1;
     private static boolean modified = false;
@@ -34,7 +31,7 @@ public class ClientEvent {
 
     @SubscribeEvent
     public static void onBeginBreak (PlayerEvent.HarvestCheck event) {
-        if (!allow) return;
+        if (!allow || !enabled) return;
         if ((event.getEntity().isCreative() == Config.allowInCreative) || Config.allowInSurvival) {
             oldBlock = event.getTargetBlock().getBlock();
             if (!modified || oldBlock == event.getTargetBlock().getBlock() || oldBlock != null) {
@@ -49,15 +46,15 @@ public class ClientEvent {
 
     @SubscribeEvent
     public static void attackEntity (AttackEntityEvent event) {
-        if (!allow) return;
+        if (!allow || !Config.allowForAttacking || !enabled) return;
         currentSelected = event.getEntity().getInventory().selected;
-        newSelected = ToolHelper.getBestToolFor(event.getTarget(), event.getEntity());
+        newSelected = ToolHelper.getBestWeaponFor(event.getEntity());
         event.getEntity().getInventory().selected = newSelected;
     }
 
     @SubscribeEvent
     public static void finishBlockBreak (InputEvent.MouseButton.Pre event) {
-        if (!allow) return;
+        if (!allow || !enabled) return;
         if (Minecraft.getInstance().screen != null || Minecraft.getInstance().player == null) return;
         Player player = Minecraft.getInstance().player;
 
@@ -74,6 +71,17 @@ public class ClientEvent {
     }
 
     @SubscribeEvent
+    public static void toggleOnOff (InputEvent.Key event) {
+        if (!allow) return;
+        if (Minecraft.getInstance().screen != null || Minecraft.getInstance().player == null) return;
+        Player player = Minecraft.getInstance().player;
+        if (Keybindings.INSTANCE.toggle.isDown()) {
+            enabled = !enabled;
+            player.sendSystemMessage(Component.translatable("chat.hotswap.toggleEnable", enabled));
+        }
+    }
+
+    @SubscribeEvent
     public static void keyInput (ClientTickEvent.Pre event) {
         allow = !Keybindings.INSTANCE.preventSwitch.isDown();
     }
@@ -82,7 +90,6 @@ public class ClientEvent {
     public static void playerJoin (PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
         currentSelected = player.getInventory().selected;
-        LOG.info("Setting {} current selected slot to {}({})", player.getDisplayName(), player.getInventory().selected, currentSelected);
     }
 
 }

@@ -1,13 +1,17 @@
-package hotswap.util;
+package hotswapneo.util;
 
+import hotswapneo.Config;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
@@ -27,24 +31,33 @@ public class ToolHelper {
         }
         if (tools.isEmpty()) {
             return player.getInventory().selected;
-        }
-        else {
-            int fastest = fastest(tools, player.getInventory().selected);
+        } else {
+            int fastest = bestTool(tools, player.getInventory().selected);
             tools.clear();
             return fastest;
         }
     }
 
-    public static int getBestToolFor (Entity entity, Player player) {
+    public static int getBestWeaponFor (Player player) {
+        ArrayList<Weapon> weapons = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
             ItemStack stack = player.getInventory().getItem(i);
-            if (isViableEntity(stack)) return i;
+            if (isViableWeapon(stack)) {
+                Weapon weapon = new Weapon(stack, getAttackDamage(stack, player), i, stack.getDamageValue());
+                weapons.add(weapon);
+            }
         }
-        return player.getInventory().selected;
+        if (weapons.isEmpty()) {
+            return player.getInventory().selected;
+        } else {
+            int best = bestWeapon(weapons, player.getInventory().selected);
+            weapons.clear();
+            return best;
+        }
     }
 
-    public static int fastest (List<Tool> tools, int current) {
-        Comparator<Tool> comparator = Comparator.comparing(Tool::destroySpeed).thenComparing(Tool::damage).reversed();
+    public static int bestTool (List<Tool> tools, int current) {
+        Comparator<Tool> comparator = Comparator.comparing(Tool::destroySpeed).thenComparing(Tool::itemDamage).reversed();
         tools.sort(comparator);
         if (tools.getFirst() != null) {
             int best = tools.getFirst().index;
@@ -55,17 +68,38 @@ public class ToolHelper {
         return current;
     }
 
+    public static int bestWeapon (List<Weapon> weapons, int current) {
+        Comparator<Weapon> comparator = Comparator.comparing(Weapon::attackDamage).thenComparing(Weapon::itemDamage).reversed();
+        weapons.sort(comparator);
+        if (weapons.getFirst() != null) {
+            int best = weapons.getFirst().index;
+            weapons.clear();
+            return best;
+        }
+        weapons.clear();
+        return current;
+    }
+
     public static float getDestroySpeed (ItemStack stack, BlockState state) {
         return stack.getDestroySpeed(state);
     }
 
-    public static ItemStack compareDamage (Player player, ItemStack stack1, ItemStack stack2) {
-        //if (stack1.getAttributeModifiers(EquipmentSlot.MAINHAND).get(Attributes.ATTACK_DAMAGE). > stack2.getAttributeModifiers(EquipmentSlot.MAINHAND).get(Attributes.ATTACK_DAMAGE))
-        return stack1;
+    public static float getAttackDamage (ItemStack stack, Player player) {
+        return Math.max(getDamageFor(stack, player), 2.f);
     }
 
-    private static boolean isViableEntity (ItemStack stack) {
-        return stack.is(getSwordItemTag()) /*|| stack.is(getAxeItemTag())*/;
+    private static float getDamageFor (ItemStack stack, Player player) {
+        String itemDamageStr = stack.getAttributeModifiers(EquipmentSlot.MAINHAND).get(Attributes.ATTACK_DAMAGE).toString().replaceFirst(".*?amount=([0-9]+\\.[0-9]+).*", "$1");
+        float itemDamage = 0.0f;
+        if (itemDamageStr.matches("[0-9]+\\.[0-9]+")) {
+            itemDamage = Float.parseFloat(itemDamageStr);
+        }
+        float playerBaseDamage = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
+        return playerBaseDamage + itemDamage;
+    }
+
+    private static boolean isViableWeapon (ItemStack stack) {
+        return stack.is(getSwordItemTag()) || (stack.is(getAxeItemTag()) == Config.allowAxe) || (stack.is(ItemTags.WEAPON_ENCHANTABLE) && stack.getItem() instanceof AxeItem == Config.allowAxe);
     }
 
     private static boolean isViable (ItemStack stack, BlockState state) {
@@ -77,10 +111,14 @@ public class ToolHelper {
             return stack.is(getShovelItemTag());
         } else if (state.is(getHoeBlockTag())) {
             return stack.is(getHoeItemTag());
-        } else if (state.is(getSwordBlockTag())) {
+        } else if (state.is(getSwordBlockTag()) || state.getBlock() == Blocks.COBWEB) {
             return stack.is(getSwordItemTag());
         }
         return false;
+    }
+
+    public static double attackSpeed (ItemStack stack, Player player) {
+        return player.getAttributes().getValue(Attributes.ATTACK_SPEED);
     }
 
     public static TagKey<Block> getPickaxeBlockTag () {
@@ -123,8 +161,10 @@ public class ToolHelper {
         return ItemTags.SWORDS;
     }
 
-    public record Tool(ItemStack stack, float destroySpeed, int index, int damage) {
+    public record Tool(ItemStack stack, float destroySpeed, int index, int itemDamage) {
+    }
 
+    public record Weapon(ItemStack stack, float attackDamage, int index, int itemDamage) {
     }
 
 }

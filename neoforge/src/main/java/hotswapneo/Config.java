@@ -1,11 +1,12 @@
-package hotswap;
+package hotswapneo;
 
+import hotswap.HotSwap;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-@EventBusSubscriber(modid = HotSwap.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = HotSwap.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
@@ -21,16 +22,28 @@ public class Config {
             .comment("Allow swapping while in survival mode.")
             .define("allowInSurvival", true);
 
+    private static final ModConfigSpec.BooleanValue ALLOW_FOR_ATTACKING = BUILDER
+            .comment("Allow auto swapping for attacking.")
+            .define("allowForAttacking", true);
+
+    private static final ModConfigSpec.BooleanValue ALLOW_AXES_FOR_ATTACKING = BUILDER
+            .comment("Allow swapping to an axe when looking for a viable attacking item.")
+            .define("allowAxe", true);
+
     static final ModConfigSpec SPEC = BUILDER.build();
 
     public static boolean allowInCreative;
     public static boolean allowInAdventure;
     public static boolean allowInSurvival;
+    public static boolean allowForAttacking;
+    public static boolean allowAxe;
 
     @SubscribeEvent
     static void onLoad (final ModConfigEvent event) {
         allowInCreative = ALLOW_IN_CREATIVE.get();
         allowInAdventure = ALLOW_IN_ADVENTURE.get();
         allowInSurvival = ALLOW_IN_SURVIVAL.get();
+        allowForAttacking = ALLOW_FOR_ATTACKING.get();
+        allowAxe = ALLOW_AXES_FOR_ATTACKING.get();
     }
 }

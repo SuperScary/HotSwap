@@ -8,8 +8,5 @@
 # HotSwap
 HotSwap is a client-side auto swapping tool made to better assist players when they are mining or fighting. Using Minecraft built in tags, HotSwap will automatically swap to the best tool in the players hotbar to aid in the action the user is attempting to perform.
 
-### And that's not all!
-Then, it will swap back!
-
 ## License
 HotSwap is covered under the MIT License
