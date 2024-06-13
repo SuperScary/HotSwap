@@ -1,10 +1,10 @@
-package hotswapneo.client.events;
+package superscary.hotswap.client.events;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import hotswap.HotSwap;
-import hotswap.client.init.Keybindings;
-import hotswapneo.Config;
-import hotswapneo.util.ToolHelper;
+import superscary.hotswap.Config;
+import superscary.hotswap.HotSwap;
+import superscary.hotswap.init.Keybindings;
+import superscary.hotswap.util.ToolHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;

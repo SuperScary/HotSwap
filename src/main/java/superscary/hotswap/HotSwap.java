@@ -1,7 +1,5 @@
-package hotswapneo;
+package superscary.hotswap;
 
-import hotswap.HotSwap;
-import hotswap.client.init.Keybindings;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -13,20 +11,22 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import superscary.hotswap.init.Keybindings;
 
-import static hotswap.HotSwap.MOD_ID;
+import static superscary.hotswap.HotSwap.MOD_ID;
 
 @Mod(MOD_ID)
-public class HotSwapNeoForge {
+public class HotSwap {
 
-    static Logger LOG = LoggerFactory.getLogger(HotSwapNeoForge.class);
+    public static final String MOD_ID = "hotswap";
 
-    public HotSwapNeoForge (IEventBus modEventBus, ModContainer modContainer) {
+    static Logger LOG = LoggerFactory.getLogger(HotSwap.class);
+
+    public HotSwap (IEventBus modEventBus, ModContainer modContainer) {
         LOG.info("[{}] began loading...", MOD_ID);
         if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
             LOG.warn("[{}] is not supported on Server configurations.", MOD_ID);
         } else {
-            HotSwap.init();
             modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         }
     }

@@ -1,4 +1,4 @@
-package hotswap.client.init;
+package superscary.hotswap.init;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
