@@ -77,7 +77,7 @@ public class ClientEvent {
         Player player = Minecraft.getInstance().player;
         if (Keybindings.INSTANCE.toggle.isDown()) {
             enabled = !enabled;
-            player.sendSystemMessage(Component.translatable("chat.hotswap.toggleEnable", enabled));
+            player.sendSystemMessage(Component.translatable("chat.hotswap.toggleEnable", HotSwap.getEnabled(enabled)));
         }
     }
 

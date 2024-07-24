@@ -1,5 +1,6 @@
 package superscary.hotswap;
 
+import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -38,6 +39,10 @@ public class HotSwap {
             event.register(Keybindings.INSTANCE.preventSwitch);
             event.register(Keybindings.INSTANCE.toggle);
         }
+    }
+
+    public static Component getEnabled (boolean bool) {
+        return bool ? Component.translatable("chat.hotswap.toggleEnable.true") : Component.translatable("chat.hotswap.toggleEnable.false");
     }
 
 }
