@@ -42,7 +42,10 @@ public class HotSwap {
     }
 
     public static Component getEnabled (boolean bool) {
-        return bool ? Component.translatable("chat.hotswap.toggleEnable.true") : Component.translatable("chat.hotswap.toggleEnable.false");
+        return switch (bool) {
+            case true -> Component.translatable("chat.hotswap.toggleEnable.true");
+            case false -> Component.translatable("chat.hotswap.toggleEnable.false");
+        };
     }
 
 }

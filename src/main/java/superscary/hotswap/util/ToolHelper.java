@@ -3,6 +3,7 @@ package superscary.hotswap.util;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.block.Block;
 import superscary.hotswap.Config;
 import net.minecraft.tags.ItemTags;
@@ -85,17 +86,8 @@ public class ToolHelper {
     }
 
     public static float getAttackDamage (ItemStack stack, Player player) {
-        return Math.max(getDamageFor(stack, player), 2.f);
-    }
-
-    private static float getDamageFor (ItemStack stack, Player player) {
-        String itemDamageStr = stack.getAttributeModifiers(EquipmentSlot.MAINHAND).get(Attributes.ATTACK_DAMAGE).toString().replaceFirst(".*?amount=([0-9]+\\.[0-9]+).*", "$1");
-        float itemDamage = 0.0f;
-        if (itemDamageStr.matches("[0-9]+\\.[0-9]+")) {
-            itemDamage = Float.parseFloat(itemDamageStr);
-        }
-        float playerBaseDamage = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
-        return playerBaseDamage + itemDamage;
+        WeaponItem weaponItem = new WeaponItem(stack, player);
+        return Math.max(weaponItem.getDamageValue(), 2.f);
     }
 
     private static boolean isViableWeapon (ItemStack stack) {
