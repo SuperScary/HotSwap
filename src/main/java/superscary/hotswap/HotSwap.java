@@ -22,6 +22,8 @@ public class HotSwap {
     public static final String MOD_ID = "hotswap";
     public static final String NAME = "HotSwap";
 
+    public static final boolean IS_ALPHA = true;
+
     static Logger LOG = LoggerFactory.getLogger(HotSwap.class);
 
     public HotSwap (IEventBus modEventBus, ModContainer modContainer) {

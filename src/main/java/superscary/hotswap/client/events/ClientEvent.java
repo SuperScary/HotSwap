@@ -1,13 +1,10 @@
 package superscary.hotswap.client.events;
 
-import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import superscary.hotswap.Config;
 import superscary.hotswap.HotSwap;
-import superscary.hotswap.api.inventory.InventoryController;
 import superscary.hotswap.init.Keybindings;
 import superscary.hotswap.util.ToolHelper;
 import net.minecraft.client.Minecraft;
@@ -20,6 +17,8 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+
+import static superscary.hotswap.HotSwap.IS_ALPHA;
 
 @SuppressWarnings("unused")
 @EventBusSubscriber(modid = HotSwap.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
@@ -52,7 +51,7 @@ public class ClientEvent {
     public static void attackEntity(AttackEntityEvent event) {
         if (!allow || !Config.allowForAttacking || !enabled) return;
         currentSelected = event.getEntity().getInventory().selected;
-        newSelected = ToolHelper.getBestWeaponFor(event.getEntity());
+        newSelected = ToolHelper.getBestWeaponFor(event.getEntity(), event.getTarget());
         event.getEntity().getInventory().selected = newSelected;
     }
 
@@ -81,7 +80,7 @@ public class ClientEvent {
         Player player = Minecraft.getInstance().player;
         if (Keybindings.INSTANCE.toggle.isDown()) {
             enabled = !enabled;
-            player.sendSystemMessage(Component.translatable("chat.hotswap.toggleEnable", HotSwap.getEnabled(enabled)));
+            player.displayClientMessage(Component.translatable("chat.hotswap.toggleEnable", HotSwap.getEnabled(enabled)), true); //.sendSystemMessage();
         }
     }
 
@@ -94,6 +93,10 @@ public class ClientEvent {
     public static void playerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
         currentSelected = player.getInventory().selected;
+
+        if (IS_ALPHA) {
+            player.displayClientMessage(Component.literal("§l§4WARNING: §rHotSwap is in alpha. Bugs should be expected."), false);
+        }
     }
 
     // TODO: Should move full stacks. Causes duplication glitch currently.

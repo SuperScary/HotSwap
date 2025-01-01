@@ -1,9 +1,8 @@
-MIT License
+## MIT License
 
-Copyright (c) 2023 NeoForged project
+### Copyright (c) 2020-2025 SuperScary
 
-This license applies to the template files as supplied by github.com/NeoForged/MDK
-
+This license applies to the files as supplied by github.com/SuperScary/HotSwap
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

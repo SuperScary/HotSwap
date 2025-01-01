@@ -4,12 +4,10 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,12 +39,12 @@ public class ToolHelper {
         }
     }
 
-    public static int getBestWeaponFor (Player player) {
+    public static int getBestWeaponFor (Player player, Entity target) {
         ArrayList<Weapon> weapons = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
             ItemStack stack = player.getInventory().getItem(i);
             if (isViableWeapon(stack)) {
-                Weapon weapon = new Weapon(stack, getAttackDamage(stack, player), i, stack.getDamageValue());
+                Weapon weapon = new Weapon(stack, getAttackDamage(stack, player, target), i, stack.getDamageValue());
                 weapons.add(weapon);
             }
         }
@@ -87,8 +85,8 @@ public class ToolHelper {
         return stack.getDestroySpeed(state);
     }
 
-    public static float getAttackDamage (ItemStack stack, Player player) {
-        WeaponItem weaponItem = new WeaponItem(stack, player);
+    public static float getAttackDamage (ItemStack stack, Player player, Entity target) {
+        WeaponItem weaponItem = new WeaponItem(stack, player, target);
         return Math.max(weaponItem.getDamageValue(), 2.f);
     }
 
@@ -111,8 +109,8 @@ public class ToolHelper {
         return false;
     }
 
-    public static double attackSpeed (ItemStack stack, Player player) {
-        WeaponItem item = new WeaponItem(stack, player);
+    public static double attackSpeed (ItemStack stack, Player player, Entity target) {
+        WeaponItem item = new WeaponItem(stack, player, target);
         return item.getSpeedValue();
     }
 
