@@ -1,53 +1,54 @@
 package superscary.hotswap.util;
 
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.EquipmentSlotGroup;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
+import com.google.common.base.Preconditions;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.*;
 import org.jetbrains.annotations.NotNull;
 
-public final class WeaponItem
-{
+public final class WeaponItem {
 
     private final Item item;
     private final Player player;
 
-    public WeaponItem (@NotNull ItemStack stack, Player player) {
+    public WeaponItem(@NotNull ItemStack stack, Player player) {
         this(stack.getItem(), player);
     }
 
-    public WeaponItem (Item item, Player player) {
+    public WeaponItem(Item item, Player player) {
+        Preconditions.checkArgument(item instanceof SwordItem || item instanceof AxeItem);
         this.item = item;
         this.player = player;
     }
 
-    public float getDamageValue () {
+    public float getDamageValue() {
         return getDamageFor(new ItemStack(item, 1), player);
     }
 
-    private float getDamageFor (@NotNull ItemStack stack, Player player) {
-        String itemDamageStr = stack.getAttributeModifiers(EquipmentSlot.MAINHAND).get(Attributes.ATTACK_DAMAGE).toString().replaceFirst(".*?amount=([0-9]+\\.[0-9]+).*", "$1");
-        item.getDefaultAttributeModifiers(stack).withModifierAdded(Attributes.ATTACK_DAMAGE, AttributeModifier.load(item), EquipmentSlotGroup.ANY).
-        float itemDamage = 0.0f;
-        if (itemDamageStr.matches("[0-9]+\\.[0-9]+")) {
-            itemDamage = Float.parseFloat(itemDamageStr);
-        }
-        float playerBaseDamage = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
-        return playerBaseDamage + itemDamage;
+    public float getSpeedValue() {
+        return getSpeedFor(new ItemStack(item, 1), player);
     }
 
-    public Item getItem ()
-    {
+    private float getDamageFor(@NotNull ItemStack stack, Player player) {
+        if (stack.getItem() instanceof TieredItem tieredItem) {
+            return tieredItem.getTier().getAttackDamageBonus();
+        }
+
+        return 0;
+    }
+
+    private float getSpeedFor(ItemStack stack, Player player) {
+        if (stack.getItem() instanceof TieredItem tieredItem) {
+            return tieredItem.getTier().getSpeed();
+        }
+
+        return 0;
+    }
+
+    public Item getItem() {
         return item;
     }
 
-    public Player getPlayer ()
-    {
+    public Player getPlayer() {
         return player;
     }
 

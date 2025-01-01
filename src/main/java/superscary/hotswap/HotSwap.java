@@ -20,13 +20,14 @@ import static superscary.hotswap.HotSwap.MOD_ID;
 public class HotSwap {
 
     public static final String MOD_ID = "hotswap";
+    public static final String NAME = "HotSwap";
 
     static Logger LOG = LoggerFactory.getLogger(HotSwap.class);
 
     public HotSwap (IEventBus modEventBus, ModContainer modContainer) {
-        LOG.info("[{}] began loading...", MOD_ID);
+        LOG.info("[{}] began loading...", NAME);
         if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
-            LOG.warn("[{}] is not supported on Server configurations.", MOD_ID);
+            LOG.warn("[{}] {} is not supported on Server configurations.", NAME, NAME);
         } else {
             modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         }
@@ -42,10 +43,7 @@ public class HotSwap {
     }
 
     public static Component getEnabled (boolean bool) {
-        return switch (bool) {
-            case true -> Component.translatable("chat.hotswap.toggleEnable.true");
-            case false -> Component.translatable("chat.hotswap.toggleEnable.false");
-        };
+        return Component.translatable("chat.hotswap.toggleEnable." + bool);
     }
 
 }

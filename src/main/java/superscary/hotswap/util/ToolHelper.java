@@ -1,19 +1,21 @@
 package superscary.hotswap.util;
 
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.level.block.Block;
-import superscary.hotswap.Config;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import superscary.hotswap.Config;
+import superscary.hotswap.api.tool.*;
+import superscary.hotswap.api.weapon.Weapon;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -96,21 +98,22 @@ public class ToolHelper {
 
     private static boolean isViable (ItemStack stack, BlockState state) {
         if (state.is(getPickaxeBlockTag())) {
-            return stack.is(getPickaxeItemTag());
+            return stack.is(getPickaxeItemTag()) || stack.getItem() instanceof IPickaxe;
         } else if (state.is(getAxeBlockTag())) {
-            return stack.is(getAxeItemTag());
+            return stack.is(getAxeItemTag()) || stack.getItem() instanceof IAxe;
         } else if (state.is(getShovelBlockTag())) {
-            return stack.is(getShovelItemTag());
+            return stack.is(getShovelItemTag()) || stack.getItem() instanceof IShovel;
         } else if (state.is(getHoeBlockTag())) {
-            return stack.is(getHoeItemTag());
+            return stack.is(getHoeItemTag()) || stack.getItem() instanceof IHoe;
         } else if (state.is(getSwordBlockTag()) || state.getBlock() == Blocks.COBWEB) {
-            return stack.is(getSwordItemTag());
+            return stack.is(getSwordItemTag()) || stack.getItem() instanceof ISword;
         }
         return false;
     }
 
     public static double attackSpeed (ItemStack stack, Player player) {
-        return player.getAttributes().getValue(Attributes.ATTACK_SPEED);
+        WeaponItem item = new WeaponItem(stack, player);
+        return item.getSpeedValue();
     }
 
     public static TagKey<Block> getPickaxeBlockTag () {
@@ -151,12 +154,6 @@ public class ToolHelper {
 
     public static TagKey<Item> getSwordItemTag () {
         return ItemTags.SWORDS;
-    }
-
-    public record Tool(ItemStack stack, float destroySpeed, int index, int itemDamage) {
-    }
-
-    public record Weapon(ItemStack stack, float attackDamage, int index, int itemDamage) {
     }
 
 }

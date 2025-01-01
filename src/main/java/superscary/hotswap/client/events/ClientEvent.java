@@ -1,8 +1,13 @@
 package superscary.hotswap.client.events;
 
+import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import superscary.hotswap.Config;
 import superscary.hotswap.HotSwap;
+import superscary.hotswap.api.inventory.InventoryController;
 import superscary.hotswap.init.Keybindings;
 import superscary.hotswap.util.ToolHelper;
 import net.minecraft.client.Minecraft;
@@ -11,7 +16,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
@@ -30,7 +34,7 @@ public class ClientEvent {
     private static Block oldBlock = null;
 
     @SubscribeEvent
-    public static void onBeginBreak (PlayerEvent.HarvestCheck event) {
+    public static void onBeginBreak(PlayerEvent.HarvestCheck event) {
         if (!allow || !enabled) return;
         if ((event.getEntity().isCreative() == Config.allowInCreative) || Config.allowInSurvival) {
             oldBlock = event.getTargetBlock().getBlock();
@@ -45,7 +49,7 @@ public class ClientEvent {
     }
 
     @SubscribeEvent
-    public static void attackEntity (AttackEntityEvent event) {
+    public static void attackEntity(AttackEntityEvent event) {
         if (!allow || !Config.allowForAttacking || !enabled) return;
         currentSelected = event.getEntity().getInventory().selected;
         newSelected = ToolHelper.getBestWeaponFor(event.getEntity());
@@ -53,7 +57,7 @@ public class ClientEvent {
     }
 
     @SubscribeEvent
-    public static void finishBlockBreak (InputEvent.MouseButton.Pre event) {
+    public static void finishBlockBreak(InputEvent.MouseButton.Pre event) {
         if (!allow || !enabled) return;
         if (Minecraft.getInstance().screen != null || Minecraft.getInstance().player == null) return;
         Player player = Minecraft.getInstance().player;
@@ -71,7 +75,7 @@ public class ClientEvent {
     }
 
     @SubscribeEvent
-    public static void toggleOnOff (InputEvent.Key event) {
+    public static void toggleOnOff(InputEvent.Key event) {
         if (!allow) return;
         if (Minecraft.getInstance().screen != null || Minecraft.getInstance().player == null) return;
         Player player = Minecraft.getInstance().player;
@@ -82,14 +86,26 @@ public class ClientEvent {
     }
 
     @SubscribeEvent
-    public static void keyInput (ClientTickEvent.Pre event) {
+    public static void keyInput(ClientTickEvent.Pre event) {
         allow = !Keybindings.INSTANCE.preventSwitch.isDown();
     }
 
     @SubscribeEvent
-    public static void playerJoin (PlayerEvent.PlayerLoggedInEvent event) {
+    public static void playerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
         currentSelected = player.getInventory().selected;
+    }
+
+    // TODO: Should move full stacks. Causes duplication glitch currently.
+    @SubscribeEvent
+    public static void placeBlock(BlockEvent.EntityPlaceEvent event) {
+        //Preconditions.checkArgument(event.getEntity() instanceof Player);
+        //ItemStack stack = new ItemStack(event.getPlacedBlock().getBlock());
+
+        //InventoryController controller = new InventoryController((Player) event.getEntity());
+        //if (controller.getFirstMatchingFromSelected() >= 0) {
+        //    controller.moveStackTo(controller.getFirstMatchingFromSelected(), controller.getInventory().selected);
+        //}
     }
 
 }
