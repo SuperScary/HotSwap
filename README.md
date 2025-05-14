@@ -1,25 +1,12 @@
+![CurseForge Game Versions](https://img.shields.io/curseforge/game-versions/404217?logo=curseforge&label=CurseForge)
+![CurseForge Version](https://img.shields.io/curseforge/v/404217?logo=curseforge)
+![Modrinth Game Versions](https://img.shields.io/modrinth/game-versions/DzrFkrG2?logo=modrinth)
+![Modrinth Version](https://img.shields.io/modrinth/v/DzrFkrG2?logo=modrinth)
 
-Installation information
-=======
+![Alt Text](https://i.ibb.co/q9y4SFq/ezgif-6-65308f07ed.gif)
 
-This template repository can be directly cloned to get you started with a new
-mod. Simply create a new repository cloned from this one, by following the
-instructions provided by [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
+# HotSwap
+HotSwap is a client-side auto swapping tool made to better assist players when they are mining or fighting. Using Minecraft built in tags, HotSwap will automatically swap to the best tool in the players hotbar to aid in the action the user is attempting to perform.
 
-Once you have your clone, simply open the repository in the IDE of your choice. The usual recommendation for an IDE is either IntelliJ IDEA or Eclipse.
-
-If at any point you are missing libraries in your IDE, or you've run into problems you can
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-{this does not affect your code} and then start the process again.
-
-Mapping Names:
-============
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license. For the latest license text, refer to the mapping file itself, or the reference copy here:
-https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
-
-Additional Resources: 
-==========
-Community Documentation: https://docs.neoforged.net/  
-NeoForged Discord: https://discord.neoforged.net/
+## License
+HotSwap is covered under the MIT License

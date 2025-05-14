@@ -29,6 +29,10 @@ public class Config {
             .comment("Allow swapping to an axe when looking for a viable attacking item.")
             .define("allowAxe", true);
 
+    private static final ModConfigSpec.BooleanValue KEEP_LAST = BUILDER
+            .comment("Stays on selected tool.")
+            .define("keepLast", false);
+
     static final ModConfigSpec SPEC = BUILDER.build();
 
     public static boolean allowInCreative;
@@ -36,6 +40,7 @@ public class Config {
     public static boolean allowInSurvival;
     public static boolean allowForAttacking;
     public static boolean allowAxe;
+    public static boolean keepLast;
 
     @SubscribeEvent
     static void onLoad (final ModConfigEvent event) {
@@ -44,5 +49,6 @@ public class Config {
         allowInSurvival = ALLOW_IN_SURVIVAL.get();
         allowForAttacking = ALLOW_FOR_ATTACKING.get();
         allowAxe = ALLOW_AXES_FOR_ATTACKING.get();
+        keepLast = KEEP_LAST.get();
     }
 }

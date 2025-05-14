@@ -66,6 +66,7 @@ public class ClientEvent {
             currentSelected = player.getInventory().selected;
         }
 
+        if (Config.keepLast) return;
         if (event.getButton() == InputConstants.MOUSE_BUTTON_LEFT && event.getAction() == InputConstants.RELEASE) {
             player.getInventory().selected = currentSelected;
             modified = false;
