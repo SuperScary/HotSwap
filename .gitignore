@@ -1,5 +1,26 @@
-.gradle
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea/*
 .idea
+!.idea/scopes
+
+# gradle
 build
-gradle
+.gradle
+
+# other
+eclipse
+run
 runs
+.vscode
