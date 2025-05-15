@@ -48,4 +48,3 @@ rootProject.name = 'HotSwap'
 include('common')
 include('fabric')
 include('neoforge')
-include('forge')
