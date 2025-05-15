@@ -1,6 +1,5 @@
 package net.superscary.hotswap;
 
-import net.minecraft.network.chat.Component;
 import net.superscary.hotswap.config.Config;
 import net.superscary.hotswap.config.JsonConfig;
 import net.superscary.hotswap.platform.Services;
@@ -10,7 +9,7 @@ import java.nio.file.Paths;
 
 public class HotSwap {
 
-    public static final boolean IS_ALPHA = true;
+    public static final boolean IS_ALPHA = false;
 
     public static final JsonConfig<Config> CONFIG;
 
@@ -18,10 +17,6 @@ public class HotSwap {
         if (Services.PLATFORM.isModLoaded("hotswap")) {
             Constants.LOG.info("Initializing HotSwap...");
         }
-    }
-
-    public static Component getEnabled (boolean bool) {
-        return Component.translatable("chat.hotswap.toggleEnable." + bool);
     }
 
     static {

@@ -80,7 +80,7 @@ public class HotSwapEvents {
 		Player player = Minecraft.getInstance().player;
 		if (Keybindings.INSTANCE.toggle.matches(button, button) && action == InputConstants.PRESS) {
 			enabled = !enabled;
-			player.displayClientMessage(Component.translatable("chat.hotswap.toggleEnable", HotSwap.getEnabled(enabled)), true); //.sendSystemMessage();
+			player.displayClientMessage(Component.translatable("chat.hotswap.toggleEnable", getEnabled(enabled)), true); //.sendSystemMessage();
 		}
 	}
 
@@ -98,6 +98,10 @@ public class HotSwapEvents {
 		if (IS_ALPHA && !CONFIG.IGNORE_ALPHA_MESSAGE) {
 			player.displayClientMessage(Component.literal("§l§4WARNING: §rHotSwap is in alpha. Bugs should be expected."), false);
 		}
+	}
+
+	public static Component getEnabled (boolean bool) {
+		return Component.translatable("chat.hotswap.toggleEnable." + bool);
 	}
 
 }
