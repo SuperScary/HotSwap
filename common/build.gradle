@@ -3,6 +3,14 @@ plugins {
     id 'net.neoforged.moddev'
 }
 
+repositories {
+    mavenCentral()
+    //maven {
+    //    name = "GitHubPackages"
+    //    url  = uri("https://maven.pkg.github.com/SuperScary/SuperConfig")
+    //}
+}
+
 neoForge {
     neoFormVersion = neo_form_version
     // Automatically enable AccessTransformers if the file exists
@@ -21,6 +29,7 @@ dependencies {
     // fabric and neoforge both bundle mixinextras, so it is safe to use it in common
     compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
     annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
+    //implementation "net.superscary.sc:superconfig:1.0-SNAPSHOT"
 }
 
 configurations {

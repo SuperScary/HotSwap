@@ -1,17 +1,13 @@
 package net.superscary.hotswap.client.events;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
-import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.superscary.hotswap.callbacks.InputPreCallback;
 import net.superscary.hotswap.events.HotSwapEvents;
-import net.superscary.hotswap.keybinding.Keybindings;
 
 public class ClientEvent {
 

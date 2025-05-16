@@ -1,6 +1,5 @@
 package net.superscary.hotswap.events;
 
-import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -21,7 +20,7 @@ import static net.superscary.hotswap.HotSwap.IS_ALPHA;
  */
 public class HotSwapEvents {
 
-	private static final Config CONFIG = HotSwap.CONFIG.get();
+	private static final Config CONFIG = HotSwap.CONFIG;
 
 	private static boolean enabled = true;
 	private static int currentSelected = -1;
@@ -32,8 +31,8 @@ public class HotSwapEvents {
 	private static Block oldBlock = null;
 
 	public static void onBeginBreak (Player player, BlockState old, BlockState targetBlock) {
-		if (!allow || !enabled) return;
-		if ((player.isCreative() == CONFIG.ALLOW_IN_CREATIVE) || CONFIG.ALLOW_IN_SURVIVAL || CONFIG.ALLOW_IN_ADVENTURE) {
+		if (!allow || !enabled || !CONFIG.ACTIONS.MINE.ENABLED.get()) return;
+		if ((player.isCreative() == CONFIG.BASIC.ALLOW_IN_CREATIVE.get()) || CONFIG.BASIC.ALLOW_IN_SURVIVAL.get() || CONFIG.BASIC.ALLOW_IN_ADVENTURE.get()) {
 			oldBlock = old.getBlock();
 			if (!modified || oldBlock == targetBlock.getBlock() || oldBlock != null) {
 				modified = true;
@@ -46,9 +45,9 @@ public class HotSwapEvents {
 	}
 
 	public static void attackEntity (Player player, Entity target) {
-		if (!allow || !CONFIG.ALLOW_FOR_ATTACKING || !enabled) return;
+		if (!allow || !CONFIG.BASIC.ALLOW_FOR_ATTACKING.get() || !CONFIG.ACTIONS.ATTACK.ENABLED.get() || !enabled) return;
 		currentSelected = player.getInventory().getSelectedSlot();
-		newSelected = ToolHelper.getBestWeaponFor(player, target, CONFIG.ALLOW_AXES_FOR_ATTACKING);
+		newSelected = ToolHelper.getBestWeaponFor(player, target, CONFIG.ACTIONS.ATTACK.ALLOW_AXES_FOR_ATTACKING.get());
 		player.getInventory().setSelectedSlot(newSelected);
 	}
 
@@ -65,7 +64,7 @@ public class HotSwapEvents {
 			currentSelected = player.getInventory().getSelectedSlot();
 		}
 
-		if (CONFIG.KEEP_LAST) return;
+		if (CONFIG.BASIC.KEEP_LAST.get()) return;
 		if (mouse && action == InputConstants.RELEASE) {
 			player.getInventory().setSelectedSlot(currentSelected);
 			modified = false;
@@ -95,7 +94,7 @@ public class HotSwapEvents {
 		if (!(entity instanceof Player player)) return;
 		currentSelected = player.getInventory().getSelectedSlot();
 
-		if (IS_ALPHA && !CONFIG.IGNORE_ALPHA_MESSAGE) {
+		if (IS_ALPHA && !CONFIG.DEBUG.IGNORE_ALPHA_MESSAGE.get()) {
 			player.displayClientMessage(Component.literal("§l§4WARNING: §rHotSwap is in alpha. Bugs should be expected."), false);
 		}
 	}

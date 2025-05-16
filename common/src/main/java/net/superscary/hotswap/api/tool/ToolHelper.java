@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.superscary.hotswap.api.ConfigChecks;
 import net.superscary.hotswap.api.weapon.Weapon;
 import net.superscary.hotswap.api.weapon.WeaponItem;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +26,7 @@ public class ToolHelper {
 		List<Tool> tools = new ArrayList<>();
 		for (int i = 0; i < 9; i++) {
 			ItemStack stack = player.getInventory().getItem(i);
-			if (isViable(stack, state)) {
+			if (!ConfigChecks.ItemHelper.configToolBlacklist(stack.getItem()) && isViable(stack, state)) {
 				Tool tool = new Tool(stack, getDestroySpeed(stack, state), i, stack.getDamageValue());
 				tools.add(tool);
 			}
@@ -43,7 +44,7 @@ public class ToolHelper {
 		ArrayList<Weapon> weapons = new ArrayList<>();
 		for (int i = 0; i < 9; i++) {
 			ItemStack stack = player.getInventory().getItem(i);
-			if (isViableWeapon(stack, allowAxe)) {
+			if (!ConfigChecks.ItemHelper.configWeaponBlacklist(stack.getItem()) && isViableWeapon(stack, allowAxe)) {
 				Weapon weapon = new Weapon(stack, getAttackDamage(stack, player, target), i, stack.getDamageValue());
 				weapons.add(weapon);
 			}
@@ -93,18 +94,23 @@ public class ToolHelper {
 	private static boolean isViableWeapon (ItemStack stack, @Nullable Boolean allowAxe) {
 		boolean axe = allowAxe != null && allowAxe;
 
+		if (!ConfigChecks.ItemHelper.configAllowedAttack(stack.getItem())) return false;
+
 		return stack.is(getSwordItemTag()) || (stack.is(getAxeItemTag()) == axe) || (stack.is(ItemTags.WEAPON_ENCHANTABLE) && stack.getItem() instanceof AxeItem == axe);
 	}
 
 	private static boolean isViable (ItemStack stack, BlockState state) {
+		if (ConfigChecks.ItemHelper.configBlacklistMine(stack.getItem())) return false;
+		if (ConfigChecks.BlockHelper.configBlacklistMine(state.getBlock())) return false;
+
 		if (state.is(getPickaxeBlockTag())) {
-			return stack.is(getPickaxeItemTag());
+			return ConfigChecks.TagHelper.anyMatchMine(stack);
 		} else if (state.is(getAxeBlockTag())) {
-			return stack.is(getAxeItemTag());
+			return ConfigChecks.TagHelper.anyMatchMine(stack);
 		} else if (state.is(getShovelBlockTag())) {
-			return stack.is(getShovelItemTag());
+			return ConfigChecks.TagHelper.anyMatchMine(stack);
 		} else if (state.is(getHoeBlockTag())) {
-			return stack.is(getHoeItemTag());
+			return ConfigChecks.TagHelper.anyMatchMine(stack);
 		} else if (state.is(getSwordBlockTag()) || state.getBlock() == Blocks.COBWEB) {
 			return stack.is(getSwordItemTag());
 		}
