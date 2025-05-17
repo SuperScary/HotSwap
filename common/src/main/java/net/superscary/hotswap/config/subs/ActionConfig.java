@@ -1,10 +1,10 @@
 package net.superscary.hotswap.config.subs;
 
-import net.superscary.sc.annotations.Comment;
-import net.superscary.sc.annotations.Config;
-import net.superscary.sc.value.wrappers.BooleanValue;
-import net.superscary.sc.value.wrappers.IntegerValue;
-import net.superscary.sc.value.wrappers.ListValue;
+import net.superscary.superconfig.annotations.Comment;
+import net.superscary.superconfig.annotations.Config;
+import net.superscary.superconfig.value.wrappers.BooleanValue;
+import net.superscary.superconfig.value.wrappers.IntegerValue;
+import net.superscary.superconfig.value.wrappers.ListValue;
 
 import java.util.List;
 

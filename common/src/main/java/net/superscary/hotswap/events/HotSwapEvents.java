@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.superscary.hotswap.HotSwap;
 import net.superscary.hotswap.api.tool.ToolHelper;
-import net.superscary.hotswap.config.Config;
+import net.superscary.hotswap.config.ModConfig;
 import net.superscary.hotswap.keybinding.Keybindings;
 
 import static net.superscary.hotswap.HotSwap.IS_ALPHA;
@@ -20,7 +20,7 @@ import static net.superscary.hotswap.HotSwap.IS_ALPHA;
  */
 public class HotSwapEvents {
 
-	private static final Config CONFIG = HotSwap.CONFIG;
+	private static final ModConfig CONFIG = HotSwap.CONFIG;
 
 	private static boolean enabled = true;
 	private static int currentSelected = -1;

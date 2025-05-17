@@ -1,10 +1,11 @@
 package net.superscary.hotswap.config;
 
 import net.superscary.hotswap.config.subs.*;
-import net.superscary.sc.annotations.Comment;
+import net.superscary.superconfig.annotations.Comment;
+import net.superscary.superconfig.annotations.Config;
 
-@net.superscary.sc.annotations.Config(name = "hotswap")
-public class Config {
+@Config(name = "hotswap")
+public class ModConfig {
 
 	@Comment({
 			"###################################",

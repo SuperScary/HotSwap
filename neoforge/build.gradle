@@ -3,6 +3,11 @@ plugins {
     id 'net.neoforged.moddev'
 }
 
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
 neoForge {
     version = neoforge_version
     // Automatically enable neoforge AccessTransformers if the file exists
@@ -34,6 +39,11 @@ neoForge {
             sourceSet sourceSets.main
         }
     }
+}
+
+dependencies {
+    implementation("net.superscary:SuperConfig:1.0.1")
+    runtimeOnly("net.superscary:SuperConfig:1.0.1")
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }

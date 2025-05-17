@@ -1,7 +1,7 @@
 package net.superscary.hotswap.config.subs;
 
-import net.superscary.sc.annotations.Comment;
-import net.superscary.sc.annotations.Config;
+import net.superscary.superconfig.annotations.Comment;
+import net.superscary.superconfig.annotations.Config;
 
 @Config(name = "action_settings")
 public class ActionSettings {

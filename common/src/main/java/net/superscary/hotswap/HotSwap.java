@@ -1,8 +1,8 @@
 package net.superscary.hotswap;
 
-import net.superscary.hotswap.config.Config;
+import net.superscary.hotswap.config.ModConfig;
 import net.superscary.hotswap.platform.Services;
-import net.superscary.sc.manager.ConfigManager;
+import net.superscary.superconfig.manager.ConfigManager;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -12,7 +12,7 @@ public class HotSwap {
 
     public static final boolean IS_ALPHA = false;
 
-    public static Config CONFIG;
+    public static ModConfig CONFIG;
 
     public static void init() {
         if (Services.PLATFORM.isModLoaded("hotswap")) {
@@ -36,7 +36,7 @@ public class HotSwap {
 
     static {
         Path configPath = Paths.get("config", Constants.MOD_ID + ".json5");
-        ConfigManager<Config> configManager = new ConfigManager<>(Config.class, configPath);
+        ConfigManager<ModConfig> configManager = new ConfigManager<>(ModConfig.class, configPath);
 		try {
 			CONFIG = configManager.load();
             configManager.save(CONFIG);
