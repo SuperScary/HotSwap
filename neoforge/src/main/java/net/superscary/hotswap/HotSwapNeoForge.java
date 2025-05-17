@@ -29,6 +29,8 @@ public class HotSwapNeoForge {
             NeoForge.EVENT_BUS.addListener(ClientEvent::toggleOnOff);
             NeoForge.EVENT_BUS.addListener(ClientEvent::holdOff);
             NeoForge.EVENT_BUS.addListener(ClientEvent::playerJoin);
+            NeoForge.EVENT_BUS.addListener(ClientEvent::itemBreak);
+            NeoForge.EVENT_BUS.addListener(ClientEvent::armorBreak);
         }
 
     }

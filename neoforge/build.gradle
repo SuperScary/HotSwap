@@ -8,6 +8,10 @@ repositories {
     mavenLocal()
 }
 
+dependencies {
+    implementation("net.superscary:SuperConfig:${superconfig_version}")
+}
+
 neoForge {
     version = neoforge_version
     // Automatically enable neoforge AccessTransformers if the file exists
@@ -24,6 +28,7 @@ neoForge {
             systemProperty('neoforge.enabledGameTestNamespaces', mod_id)
             ideName = "NeoForge ${it.name.capitalize()} (${project.path})" // Unify the run config names with fabric
         }
+
         client {
             client()
         }
@@ -39,11 +44,6 @@ neoForge {
             sourceSet sourceSets.main
         }
     }
-}
-
-dependencies {
-    implementation("net.superscary:SuperConfig:1.0.1")
-    runtimeOnly("net.superscary:SuperConfig:1.0.1")
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }

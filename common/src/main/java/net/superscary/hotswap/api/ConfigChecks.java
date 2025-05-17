@@ -3,6 +3,7 @@ package net.superscary.hotswap.api;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -78,6 +79,16 @@ public class ConfigChecks {
 			String[] parts = tag.split(":");
 			return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(parts[0], parts[1]));
 		}
+
+		public static TagKey<Item> getArmorType (ItemStack stack) {
+			if (stack.isEmpty()) return null;
+			if (stack.is(ItemTags.HEAD_ARMOR)) return ItemTags.HEAD_ARMOR;
+			if (stack.is(ItemTags.CHEST_ARMOR)) return ItemTags.CHEST_ARMOR;
+			if (stack.is(ItemTags.LEG_ARMOR)) return ItemTags.LEG_ARMOR;
+			if (stack.is(ItemTags.FOOT_ARMOR)) return ItemTags.FOOT_ARMOR;
+			return null;
+		}
+
 	}
 
 	public static class ItemHelper {
@@ -97,6 +108,11 @@ public class ConfigChecks {
 		public static boolean configAllowedAttack (Item item) {
 			if (item == null) return false;
 			return !HotSwap.CONFIG.ACTIONS.ATTACK.BLACKLIST.get().contains(item.getDescriptionId());
+		}
+
+		public static boolean configBlacklistArmorPiece (Item item) {
+			if (item == null) return false;
+			return HotSwap.CONFIG.ARMOR.BLACKLIST.get().contains(item.getDescriptionId());
 		}
 
 		public static boolean configToolBlacklist (Item item) {

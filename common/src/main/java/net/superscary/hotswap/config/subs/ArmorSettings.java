@@ -5,6 +5,7 @@ import net.superscary.superconfig.annotations.Comment;
 import net.superscary.superconfig.annotations.Config;
 import net.superscary.superconfig.value.wrappers.BooleanValue;
 import net.superscary.superconfig.value.wrappers.EnumValue;
+import net.superscary.superconfig.value.wrappers.IntegerValue;
 import net.superscary.superconfig.value.wrappers.ListValue;
 
 import java.util.List;
@@ -27,14 +28,18 @@ public class ArmorSettings {
 	@Comment({"Which tag groups to consider when swapping armor.",
 			"Order does not matter."})
 	public ListValue<String> TAGS = new ListValue<>(List.of(
-			"#minecraft:armor",
-			"#minecraft:chestplates",
-			"#minecraft:leggings",
-			"#minecraft:boots",
-			"#minecraft:helmets",
-			"#minecraft:elytra"
+			"#minecraft:chest_armor",
+			"#minecraft:leg_armor",
+			"#minecraft:foot_armor",
+			"#minecraft:head_armor"
 	));
 
 	@Comment("Any item IDs to blacklist even if their tags match. IE: \"minecraft:diamond_leggings\" will never be swapped to if enabled in this list.")
 	public ListValue<String> BLACKLIST = new ListValue<>(List.of());
+
+	@Comment("The slot IDs for the armor slots.")
+	public IntegerValue HEAD_SLOT = new IntegerValue(39);
+	public IntegerValue CHEST_SLOT = new IntegerValue(38);
+	public IntegerValue LEGS_SLOT = new IntegerValue(37);
+	public IntegerValue FEET_SLOT = new IntegerValue(36);
 }

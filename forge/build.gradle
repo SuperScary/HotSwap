@@ -17,7 +17,7 @@ jar {
 }
 
 dependencies {
-    implementation "net.superscary:SuperConfig:1.0.1"
+    implementation "net.superscary:SuperConfig:${superconfig_version}"
 }
 
 minecraft {

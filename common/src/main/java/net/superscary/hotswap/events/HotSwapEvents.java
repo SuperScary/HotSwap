@@ -4,10 +4,14 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.superscary.hotswap.HotSwap;
+import net.superscary.hotswap.api.armor.ArmorHelper;
 import net.superscary.hotswap.api.tool.ToolHelper;
 import net.superscary.hotswap.config.ModConfig;
 import net.superscary.hotswap.keybinding.Keybindings;
@@ -30,6 +34,12 @@ public class HotSwapEvents {
 	private static boolean allow = true;
 	private static Block oldBlock = null;
 
+	/**
+	 * Called when the player starts breaking a block.
+	 * @param player The player breaking the block
+	 * @param old The old block state
+	 * @param targetBlock The target block state
+	 */
 	public static void onBeginBreak (Player player, BlockState old, BlockState targetBlock) {
 		if (!allow || !enabled || !CONFIG.ACTIONS.MINE.ENABLED.get()) return;
 		if ((player.isCreative() == CONFIG.BASIC.ALLOW_IN_CREATIVE.get()) || CONFIG.BASIC.ALLOW_IN_SURVIVAL.get() || CONFIG.BASIC.ALLOW_IN_ADVENTURE.get()) {
@@ -44,6 +54,11 @@ public class HotSwapEvents {
 		}
 	}
 
+	/**
+	 * Called when the player attacks an entity.
+	 * @param player The player attacking the entity
+	 * @param target The target entity
+	 */
 	public static void attackEntity (Player player, Entity target) {
 		if (!allow || !CONFIG.BASIC.ALLOW_FOR_ATTACKING.get() || !CONFIG.ACTIONS.ATTACK.ENABLED.get() || !enabled) return;
 		currentSelected = player.getInventory().getSelectedSlot();
@@ -51,6 +66,11 @@ public class HotSwapEvents {
 		player.getInventory().setSelectedSlot(newSelected);
 	}
 
+	/**
+	 * Called when the player finishes breaking a block.
+	 * @param button The button pressed
+	 * @param action The action performed
+	 */
 	public static void finishBlockBreak (int button, int action) {
 		if (!allow || !enabled) return;
 		if (Minecraft.getInstance().screen != null || Minecraft.getInstance().player == null) return;
@@ -72,6 +92,11 @@ public class HotSwapEvents {
 		}
 	}
 
+	/**
+	 * Called when the player toggles the mod on or off.
+	 * @param button The button pressed
+	 * @param action The action performed
+	 */
 	public static void toggleOnOff (int button, int action) {
 		if (!allow) return;
 		if (Minecraft.getInstance().screen != null || Minecraft.getInstance().player == null) return;
@@ -84,12 +109,16 @@ public class HotSwapEvents {
 	}
 
 	/**
-	 * Ticking method
+	 * Called when the player holds off the key.
 	 */
 	public static void holdOff () {
 		allow = !Keybindings.INSTANCE.preventSwitch.isDown();
 	}
 
+	/**
+	 * Called when the player joins the game.
+	 * @param entity The player entity
+	 */
 	public static void playerJoin (Entity entity) {
 		if (!(entity instanceof Player player)) return;
 		currentSelected = player.getInventory().getSelectedSlot();
@@ -99,6 +128,39 @@ public class HotSwapEvents {
 		}
 	}
 
+	/**
+	 * Called when the player breaks an item.
+	 * @param player The player breaking the item
+	 */
+	public static void armorBreak (Player player, ItemStack stack, float damageToApply) {
+		if (!allow || !enabled) return;
+		/*System.out.println("Armor break event");
+
+		if (ArmorHelper.isArmorItem(broken)) {
+			System.out.println("Is armor item");
+			ArmorHelper.doArmorSwap(player, slot, broken);
+		}*/
+
+		int inventorySlot;
+
+		for (EquipmentSlot slot : EquipmentSlot.values()) {
+			inventorySlot = slot.getIndex(Inventory.INVENTORY_SIZE);
+			if (slot.getType() != EquipmentSlot.Type.HUMANOID_ARMOR) continue;
+			if (stack.isEmpty()) continue;                  // no piece there
+			int remainingDur   = stack.getMaxDamage() - stack.getDamageValue();
+
+			if (damageToApply >= remainingDur) {
+				ArmorHelper.doArmorSwap(player, inventorySlot, stack);
+				return;
+			}
+		}
+	}
+
+	/**
+	 * Overlay chat component for toggling the mod on or off.
+	 * @param bool The boolean value to display
+	 * @return The chat component
+	 */
 	public static Component getEnabled (boolean bool) {
 		return Component.translatable("chat.hotswap.toggleEnable." + bool);
 	}
